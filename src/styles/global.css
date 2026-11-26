@@ -2,22 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --navy: #0b1f3a;
+  --crimson: #9b1b30;
+  --gold: #d4af37;
+  --cream: #f7f3e9;
+  --ink: #1a1a1a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
-:focus-visible {
-  outline: 2px solid #d4af37;
-  outline-offset: 2px;
-}
-
-.text-gold {
-  color: #d4af37;
-}
-
-.border-gold {
-  border-color: #d4af37;
-}
+.bg-navy { background-color: var(--navy); }
+.text-navy { color: var(--navy); }
+.bg-crimson { background-color: var(--crimson); }
+.text-crimson { color: var(--crimson); }
+.bg-gold { background-color: var(--gold); }
+.text-gold { color: var(--gold); }
+.bg-cream { background-color: var(--cream); }
+.text-cream { color: var(--cream); }
+.text-ink { color: var(--ink); }
+.border-gold { border-color: #d4af37; }
 
 @keyframes wobble {
   0%, 100% { transform: rotate(0deg); }
@@ -41,9 +51,19 @@ body {
   50% { transform: scale(1.06); }
 }
 
+@keyframes ripple {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
 .contact-btn {
   @apply relative inline-flex items-center gap-2 px-6 py-3 rounded-sm font-medium text-white transition-all duration-300;
   animation: wave 2.5s ease-in-out infinite;
+}
+
+.animate-ripple {
+  animation: ripple 2.2s ease-out infinite, wave 2.5s ease-in-out infinite;
 }
 
 .contact-btn:hover {
