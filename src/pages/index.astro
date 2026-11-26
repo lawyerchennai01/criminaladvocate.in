@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 
 <Layout title="Rajendra Criminal Law Firm | Best Criminal Advocates in Chennai">
   <section class="relative bg-navy text-cream overflow-hidden">
-    <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"></div>
+    <div class="absolute inset-0 opacity-30 bg-[url('/office.webp')] bg-cover bg-center"></div>
     <div class="relative max-w-6xl mx-auto px-6 py-24 md:py-36">
       <p class="text-gold tracking-widest text-sm font-medium uppercase mb-4">Madras High Court · Chennai</p>
       <h1 class="font-serif text-4xl md:text-6xl leading-tight max-w-3xl">
@@ -28,7 +28,6 @@ import Layout from '../layouts/Layout.astro';
     <div class="max-w-6xl mx-auto px-6">
       <h2 class="font-serif text-3xl md:text-4xl text-navy text-center mb-4">Core Practice Areas</h2>
       <p class="text-center text-ink/70 max-w-2xl mx-auto mb-12">Focused criminal defence under the Bharatiya Nyaya Sanhita and related special laws.</p>
-      
       <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <a href="/practice/bail" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
           <h3 class="font-serif text-xl text-navy mb-2">Bail & Anticipatory Bail</h3>
@@ -61,18 +60,9 @@ import Layout from '../layouts/Layout.astro';
   <section class="bg-navy text-cream py-20">
     <div class="max-w-6xl mx-auto px-6">
       <div class="grid md:grid-cols-3 gap-10 text-center">
-        <div>
-          <div class="text-4xl font-serif text-gold mb-2">20+</div>
-          <div class="text-sm uppercase tracking-wider">Years of Practice</div>
-        </div>
-        <div>
-          <div class="text-4xl font-serif text-gold mb-2">24/7</div>
-          <div class="text-sm uppercase tracking-wider">Emergency Assistance</div>
-        </div>
-        <div>
-          <div class="text-4xl font-serif text-gold mb-2">MHC</div>
-          <div class="text-sm uppercase tracking-wider">High Court Expertise</div>
-        </div>
+        <div><div class="text-4xl font-serif text-gold mb-2">20+</div><div class="text-sm uppercase tracking-wider">Years of Practice</div></div>
+        <div><div class="text-4xl font-serif text-gold mb-2">24/7</div><div class="text-sm uppercase tracking-wider">Emergency Assistance</div></div>
+        <div><div class="text-4xl font-serif text-gold mb-2">MHC</div><div class="text-sm uppercase tracking-wider">High Court Expertise</div></div>
       </div>
     </div>
   </section>
@@ -81,9 +71,7 @@ import Layout from '../layouts/Layout.astro';
     <div class="max-w-4xl mx-auto px-6 text-center">
       <h2 class="font-serif text-3xl text-navy mb-4">Facing Criminal Charges?</h2>
       <p class="text-ink/80 mb-8">Early intervention is critical. Speak with a senior advocate today.</p>
-      <a href="/contact" class="inline-block bg-navy text-cream px-10 py-4 rounded-sm font-medium hover:bg-navy/90 transition">
-        Request Consultation
-      </a>
+      <a href="/contact" class="inline-block bg-navy text-cream px-10 py-4 rounded-sm font-medium hover:bg-navy/90 transition">Request Consultation</a>
     </div>
   </section>
 </Layout>
@@ -91,12 +79,7 @@ import Layout from '../layouts/Layout.astro';
 <script>
   const wa = document.getElementById('wa-hero');
   if (wa) {
-    const msg = encodeURIComponent(
-      `Hello Rajendra Criminal Law Firm,\n\n` +
-      `I need legal assistance regarding a criminal matter.\n\n` +
-      `Page: ${window.location.href}\n` +
-      `Please contact me.`
-    );
+    const msg = encodeURIComponent(`Hello Rajendra Criminal Law Firm,\n\nI need legal assistance regarding a criminal matter.\n\nPage: ${window.location.href}\nPlease contact me.`);
     wa.href = `https://wa.me/919994287060?text=${msg}`;
   }
 </script>
