@@ -1,0 +1,70 @@
+---
+// Topic pages for the few old WordPress tag URLs that earn search traffic and list two or more posts.
+// Every other old tag URL is redirected (public/_redirects). Built by scripts/build-tag-map.mjs.
+import Layout from '../../layouts/Layout.astro';
+import { SITE, catBySlug, catUrl } from '../../data/site';
+import { ITEMS, fmtDate } from '../../data/content';
+import tags from '../../data/tags.json';
+
+export function getStaticPaths() {
+  return tags.hubs.map((hub) => ({ params: { slug: hub.slug }, props: { hub } }));
+}
+
+const { hub } = Astro.props;
+const url = `${SITE.url}/attorneys-chennai/${hub.slug}/`;
+const name = hub.name.charAt(0).toUpperCase() + hub.name.slice(1);
+const posts = hub.posts.map((p: string) => ITEMS.find((i) => i.path === p)).filter(Boolean) as typeof ITEMS;
+const catCount = new Map<string, number>();
+posts.forEach((p) => p.cats.forEach((c) => catCount.set(c, (catCount.get(c) ?? 0) + 1)));
+const cats = [...catCount.entries()].sort((a, b) => b[1] - a[1]).slice(0, 3).map(([s]) => catBySlug(s)).filter(Boolean) as NonNullable<ReturnType<typeof catBySlug>>[];
+const trail = [{ name: 'Home', href: '/' }, { name: 'Legal services', href: '/legal-services/' }, { name: name }];
+const schema = [
+  { '@type': 'CollectionPage', '@id': url + '#collection', name, url, isPartOf: { '@id': SITE.url + '/#website' }, numberOfItems: posts.length },
+  { '@type': 'BreadcrumbList', itemListElement: trail.map((t, i) => ({ '@type': 'ListItem', position: i + 1, name: t.name, ...(t.href ? { item: SITE.url + t.href } : {}) })) },
+];
+---
+
+<Layout
+  title={`${name}: Articles and Legal Guides in Chennai`}
+  description={`${posts.length} articles on ${name} from Rajendra Criminal Law Firm, Chennai. General legal information, not legal advice.`}
+  canonical={url}
+  schema={schema}
+>
+  <section class="bg-navy text-cream">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <nav aria-label="Breadcrumb" class="text-xs text-cream/70 mb-5">
+        <ol class="flex flex-wrap gap-x-2 gap-y-1">
+          {trail.map((t, i) => (
+            <li class="flex gap-2">
+              {t.href ? <a href={t.href} class="hover:text-gold hover:underline underline-offset-2">{t.name}</a> : <span aria-current="page" class="text-cream/90">{t.name}</span>}
+              {i < trail.length - 1 && <span aria-hidden="true">›</span>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <h1 class="font-serif text-3xl sm:text-4xl leading-tight font-bold">{name}</h1>
+      <p class="mt-4 text-cream/80 max-w-2xl">{posts.length} articles on this topic, for general information.</p>
+    </div>
+  </section>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+    <ul class="space-y-3">
+      {posts.map((p) => (
+        <li>
+          <a href={p.path} class="card-link">
+            <span class="block text-navy font-semibold leading-snug">{p.title}</span>
+            <span class="block mt-1 text-sm text-ink/70 line-clamp-2">{p.description}</span>
+            <span class="block mt-1 text-xs text-ink/50">{fmtDate(p.date)}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    {cats.length > 0 && (
+      <p class="mt-10 text-sm flex flex-wrap gap-2 items-center">
+        <span class="text-ink/60">Related topics:</span>
+        {cats.map((c) => <a href={catUrl(c)} class="px-3 py-1 bg-white border border-navy/15 hover:border-gold text-navy rounded-full">{c.name}</a>)}
+      </p>
+    )}
+    <p class="mt-8 text-sm text-ink/60">General legal information only; it is not legal advice and does not create an advocate–client relationship.</p>
+  </div>
+</Layout>

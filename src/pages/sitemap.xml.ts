@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { SITE, CATEGORIES, catUrl } from '../data/site';
 import { ITEMS } from '../data/content';
+import tags from '../data/tags.json';
 
 export const GET: APIRoute = () => {
   const urls: { loc: string; lastmod?: string; priority: string }[] = [
@@ -8,6 +9,7 @@ export const GET: APIRoute = () => {
     { loc: '/contact/', priority: '0.6' },
     { loc: '/news/', priority: '0.6' },
     ...CATEGORIES.filter((c) => c.count > 0).map((c) => ({ loc: catUrl(c), priority: '0.7' })),
+    ...tags.hubs.map((h) => ({ loc: `/attorneys-chennai/${h.slug}/`, priority: '0.5' })),
     ...ITEMS.map((i) => ({ loc: i.path, lastmod: i.modified || i.date, priority: i.type === 'page' ? '0.8' : '0.6' })),
   ];
   const xml =
