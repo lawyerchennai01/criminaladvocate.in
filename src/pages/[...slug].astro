@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { SITE, CATEGORIES, catUrl, catBySlug } from '../data/site';
-import { ITEMS, POSTS, NEWS, HUB_PATHS, START_GUIDES, CATEGORY_PINS, slugOf, enrich, categoryChain, itemCats, fmtDate, faqPairs, type Item } from '../data/content';
+import { ITEMS, POSTS, NEWS, HUB_PATHS, START_GUIDES, CATEGORY_PINS, slugOf, enrich, categoryChain, itemCats, fmtDate, type Item } from '../data/content';
 
 export function getStaticPaths() {
   const pages = ITEMS.map((item) => ({ params: { slug: slugOf(item.path) }, props: { kind: 'item', item } }));
@@ -29,11 +29,12 @@ let chips: ReturnType<typeof itemCats> = [];
 let heroImg: Item['image'] = null;
 let isServices = false;
 let keyGuides: Item[] = [];
+let e: ReturnType<typeof enrich> = { html: '', toc: [], faq: [] };
 const startGuides = START_GUIDES.map((p) => ITEMS.find((i) => i.path === p)).filter(Boolean) as Item[];
 let ogType: 'website' | 'article' = 'website';
 
 if (kind === 'item' && item) {
-  const e = enrich(item.html);
+  e = enrich(item.html);
   bodyHtml = e.html;
   toc = e.toc.length >= 4 ? e.toc : [];
   h1 = item.title;
@@ -62,7 +63,8 @@ if (kind === 'item' && item) {
       wordCount: item.words,
       author: { '@id': SITE.url + '/#legalservice' },
       publisher: { '@id': SITE.url + '/#legalservice' },
-      ...(item.image ? { image: SITE.url + item.image.src } : {}),
+      image: SITE.url + (item.image?.src ?? SITE.logo),
+      ...(item.tags?.length ? { keywords: item.tags.join(', ') } : {}),
       ...(primary && item.type === 'post' ? { articleSection: primary.name } : {}),
     });
     // Related reading is the next four items in the same list, wrapping around, so every item
@@ -71,9 +73,8 @@ if (kind === 'item' && item) {
     const at = pool.findIndex((p) => p.path === item.path);
     if (at >= 0) related = Array.from({ length: Math.min(4, pool.length - 1) }, (_, k) => pool[(at + 1 + k) % pool.length]);
   }
-  if (item.path === '/faq/') {
-    const pairs = faqPairs(item.html);
-    if (pairs.length) schema.push({ '@type': 'FAQPage', mainEntity: pairs.map((p) => ({ '@type': 'Question', name: p.q, acceptedAnswer: { '@type': 'Answer', text: p.a } })) });
+  if (e.faq.length >= 2) {
+    schema.push({ '@type': 'FAQPage', '@id': url + '#faq', mainEntity: e.faq.map((p) => ({ '@type': 'Question', name: p.q, acceptedAnswer: { '@type': 'Answer', text: p.a } })) });
   }
   if (HUB_PATHS.has(item.path)) isServices = true;
   schema.push(breadcrumb(trail.map((t, i) => (i === trail.length - 1 ? { name: t.name } : t))));
@@ -144,6 +145,12 @@ const showCta = kind === 'category' || (item && (item.type !== 'page' || item.pa
           </div>
         )}
 
+        {item.tags && item.tags.length > 0 && (
+          <p class="mt-10 text-sm flex flex-wrap gap-2 items-center">
+            <span class="text-ink/60">Topics:</span>
+            {item.tags.map((t) => <span class="px-3 py-1 bg-white border border-navy/15 text-navy rounded-full">{t}</span>)}
+          </p>
+        )}
         {chips.length > 0 && item.type === 'post' && (
           <p class="mt-10 text-sm flex flex-wrap gap-2 items-center">
             <span class="text-ink/60">Filed under:</span>

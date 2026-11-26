@@ -62,6 +62,8 @@ for (const it of items) {
     excerpt: decode(G(it, 'excerpt:encoded').replace(/<[^>]+>/g, ' ')),
     seoTitle: decode(META(it, '_yoast_wpseo_title')), seoDesc: decode(META(it, '_yoast_wpseo_metadesc')),
     thumb: META(it, '_thumbnail_id'), cats: catSlugs, primary,
+    tagsRaw: [...it.matchAll(/<category domain="post_tag"[^>]*><!\[CDATA\[([^\]]*)/g)].map((m) => decode(m[1])),
+    focus: decode(META(it, '_yoast_wpseo_focuskw')),
   });
 }
 console.log('items', raw.length);
@@ -184,6 +186,35 @@ function clean(html, titleAlt) {
   return out.replace(/\n{2,}/g, '\n').trim();
 }
 
+// ---------- tags ----------
+// WordPress had up to 200 stuffed tags per post (9,296 distinct). Keep at most 6 clean, on-topic ones:
+// drop superlatives / "near me" / template phrases, require a keyword shared with the title or focus keyword,
+// de-duplicate near-identical phrases. Posts left with none fall back to their focus keyword and category.
+const STOP = new Set('the and for with from that this are was how what when why can you your under into over about case cases law laws act india chennai lawyer lawyers advocate advocates attorney attorneys legal court'.split(' '));
+const sig = (s) => new Set(s.toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter((w) => w.length > 2 && !STOP.has(w)));
+const BAD = /\b(best|top|no\.?\s?1|number one|near me|nearby|near by|good|leading|cheap|affordable|rated|famous|experienced|expert|vakils?|fees?|free)\b/i;
+const key = (s) => [...sig(s)].map((w) => w.replace(/s$/, '')).sort().join(' ');
+function curateTags(r) {
+  const title = sig(r.title + ' ' + r.focus);
+  const seen = new Set();
+  const out = [];
+  const scored = r.tagsRaw
+    .map((t) => t.replace(/\s+/g, ' ').trim())
+    .filter((t) => t.length >= 4 && t.length <= 48 && !BAD.test(t))
+    .map((t) => ({ t, shared: [...sig(t)].filter((w) => title.has(w)).length, words: t.split(' ').length }))
+    .filter((x) => x.shared > 0)
+    .sort((a, b) => b.shared - a.shared || Math.abs(a.words - 3) - Math.abs(b.words - 3));
+  const add = (t) => { const k = key(t) || t.toLowerCase(); if (!seen.has(k) && out.length < 6) { seen.add(k); out.push(t); } };
+  for (const x of scored) add(x.t);
+  if (out.length < 2) {
+    if (r.focus && !BAD.test(r.focus)) add(r.focus.replace(/\b\w/g, (c) => c.toUpperCase()));
+    const c = r.primary && catBySlug.get(r.primary);
+    // only when the category name actually relates to the article (WordPress primary categories are sometimes off-topic)
+    if (c && [...sig(c.name)].some((w) => title.has(w))) add(c.name);
+  }
+  return out;
+}
+
 const plain = (h) => decode(h.replace(/<[^>]+>/g, ' '));
 const result = [];
 for (const r of raw) {
@@ -198,6 +229,7 @@ for (const r of raw) {
     type: r.type, path: r.path, title: r.title, date: r.date, modified: r.modified,
     seoTitle: r.seoTitle && !r.seoTitle.includes('%%') ? r.seoTitle : '', description,
     cats: r.cats, primary: r.primary, words: text.split(' ').filter(Boolean).length, html,
+    tags: curateTags(r),
     image: tmedia ? { src: tmedia.src, w: tmedia.w, h: tmedia.h, alt: th.alt || r.title } : null,
   });
 }
