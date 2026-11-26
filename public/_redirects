@@ -1,0 +1,30 @@
+# Cloudflare Pages redirects. Old hand-built URLs from the earlier Astro draft -> live WordPress structure.
+/blog/* /:splat 301
+/practice /legal-services/ 301
+/practice/ /legal-services/ 301
+/practice/* /legal-services/ 301
+
+# Root-level category stubs -> real category URLs
+/animal-abuse /attorneys-lawyers-chennai/animal-abuse/ 301
+/arrest-and-custody /attorneys-lawyers-chennai/arrest-and-custody/ 301
+/bail /attorneys-lawyers-chennai/bail/ 301
+/bail/ /attorneys-lawyers-chennai/bail/ 301
+/child-custody /attorneys-lawyers-chennai/family-law/child-custody/ 301
+/criminal-defense /attorneys-lawyers-chennai/criminal-defense/ 301
+/criminal-procedure /attorneys-lawyers-chennai/criminal-procedure/ 301
+/cyber-crime-law /attorneys-lawyers-chennai/cyber-crime-law/ 301
+/domestic-violence /attorneys-lawyers-chennai/family-law/domestic-violence/ 301
+/drug-cases /attorneys-lawyers-chennai/drug-cases/ 301
+/economic-offences /attorneys-lawyers-chennai/economic-offences/ 301
+/family-law /attorneys-lawyers-chennai/family-law/ 301
+/financial-fraud /attorneys-lawyers-chennai/financial-fraud/ 301
+/fir-and-investigation /attorneys-lawyers-chennai/fir-and-investigation/ 301
+/real-estate-fraud /attorneys-lawyers-chennai/real-estate-fraud/ 301
+/human-rights /attorneys-lawyers-chennai/civil-and-human-rights/ 301
+/white-collar-crime /attorneys-lawyers-chennai/economic-offences/ 301
+
+# Old WordPress tag archives (about 9,300 URLs, not migrated) and author archives
+/attorneys-chennai/* /legal-services/ 301
+/attorneys-lawyers-chennai /legal-services/ 301
+/attorneys-lawyers-chennai/ /legal-services/ 301
+/author/* / 301

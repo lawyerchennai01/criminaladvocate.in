@@ -1,0 +1,191 @@
+[
+ {
+  "slug": "adoption-surrogacy",
+  "name": "Adoption & Surrogacy",
+  "path": "adoption-surrogacy",
+  "parent": null,
+  "count": 68
+ },
+ {
+  "slug": "animal-abuse",
+  "name": "Animal abuse",
+  "path": "animal-abuse",
+  "parent": null,
+  "count": 61
+ },
+ {
+  "slug": "arrest-and-custody",
+  "name": "Arrest and Custody",
+  "path": "arrest-and-custody",
+  "parent": null,
+  "count": 1
+ },
+ {
+  "slug": "bail",
+  "name": "Bail Lawyers in Chennai Tn",
+  "path": "bail",
+  "parent": null,
+  "count": 131
+ },
+ {
+  "slug": "civil-and-human-rights",
+  "name": "Civil and Human Rights",
+  "path": "civil-and-human-rights",
+  "parent": null,
+  "count": 134
+ },
+ {
+  "slug": "criminal-defense",
+  "name": "Criminal Defense",
+  "path": "criminal-defense",
+  "parent": null,
+  "count": 230
+ },
+ {
+  "slug": "criminal-law",
+  "name": "Criminal Law",
+  "path": "criminal-law",
+  "parent": null,
+  "count": 1
+ },
+ {
+  "slug": "criminal-procedure",
+  "name": "Criminal Procedure",
+  "path": "criminal-procedure",
+  "parent": null,
+  "count": 3
+ },
+ {
+  "slug": "cyber-crime",
+  "name": "Cyber Crime",
+  "path": "cyber-crime",
+  "parent": null,
+  "count": 1
+ },
+ {
+  "slug": "cyber-crime-law",
+  "name": "Cyber crime law",
+  "path": "cyber-crime-law",
+  "parent": null,
+  "count": 100
+ },
+ {
+  "slug": "defamation",
+  "name": "Defamation",
+  "path": "defamation",
+  "parent": null,
+  "count": 33
+ },
+ {
+  "slug": "drug-cases",
+  "name": "Drug Cases",
+  "path": "drug-cases",
+  "parent": null,
+  "count": 26
+ },
+ {
+  "slug": "economic-offences",
+  "name": "Economic Offences",
+  "path": "economic-offences",
+  "parent": null,
+  "count": 1
+ },
+ {
+  "slug": "family-law",
+  "name": "Family Law",
+  "path": "family-law",
+  "parent": null,
+  "count": 31
+ },
+ {
+  "slug": "family-offences",
+  "name": "Family Offences",
+  "path": "family-offences",
+  "parent": null,
+  "count": 1
+ },
+ {
+  "slug": "financial-fraud",
+  "name": "Financial fraud",
+  "path": "financial-fraud",
+  "parent": null,
+  "count": 30
+ },
+ {
+  "slug": "fir-and-investigation",
+  "name": "FIR and Investigation",
+  "path": "fir-and-investigation",
+  "parent": null,
+  "count": 2
+ },
+ {
+  "slug": "grand-parents-rights",
+  "name": "Grand Parents Rights",
+  "path": "family-law/grand-parents-rights",
+  "parent": "family-law",
+  "count": 6
+ },
+ {
+  "slug": "law-news-events",
+  "name": "Law News/Events",
+  "path": "law-news-events",
+  "parent": null,
+  "count": 7
+ },
+ {
+  "slug": "legal",
+  "name": "Legal",
+  "path": "legal",
+  "parent": null,
+  "count": 16
+ },
+ {
+  "slug": "real-estate-fraud",
+  "name": "REAL ESTATE FRAUD",
+  "path": "real-estate-fraud",
+  "parent": null,
+  "count": 16
+ },
+ {
+  "slug": "technology-theft",
+  "name": "Technology theft",
+  "path": "technology-theft",
+  "parent": null,
+  "count": 16
+ },
+ {
+  "slug": "travel-and-passport",
+  "name": "Travel and Passport",
+  "path": "travel-and-passport",
+  "parent": null,
+  "count": 1
+ },
+ {
+  "slug": "anticipatory-bail",
+  "name": "Anticipatory Bail",
+  "path": "bail/anticipatory-bail",
+  "parent": "bail",
+  "count": 103
+ },
+ {
+  "slug": "child-custody",
+  "name": "Child Custody",
+  "path": "family-law/child-custody",
+  "parent": "family-law",
+  "count": 11
+ },
+ {
+  "slug": "divorce-legal-separation",
+  "name": "Divorce / Legal Separation",
+  "path": "family-law/divorce-legal-separation",
+  "parent": "family-law",
+  "count": 9
+ },
+ {
+  "slug": "domestic-violence",
+  "name": "Domestic Violence",
+  "path": "family-law/domestic-violence",
+  "parent": "family-law",
+  "count": 15
+ }
+]

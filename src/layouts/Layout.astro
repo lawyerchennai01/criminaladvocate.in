@@ -1,43 +1,250 @@
 ---
 import '../styles/global.css';
+import { SITE, FEATURED, catUrl, waLink, mailLink, legalServiceSchema, websiteSchema } from '../data/site';
 
 interface Props {
   title: string;
   description?: string;
+  canonical?: string;
+  image?: string;
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+  schema?: object[];
+  published?: string;
+  modified?: string;
 }
 
-const { title, description = "Rajendra Criminal Law Firm — Senior criminal advocates in Chennai." } = Astro.props;
-const site = "https://criminaladvocate.in";
+const {
+  title,
+  description = SITE.description,
+  canonical,
+  image,
+  ogType = 'website',
+  noindex = false,
+  schema = [],
+  published,
+  modified,
+} = Astro.props;
+
+const path = Astro.url.pathname;
+const canonicalUrl = canonical ?? SITE.url + path;
+const ogImage = SITE.url + (image ?? SITE.logo);
+const fullTitle = title.toLowerCase().includes('rajendra') ? title : `${title} | ${SITE.name}`;
+const graph = [legalServiceSchema(), websiteSchema(), ...schema];
+const nav = [
+  { href: '/', label: 'Home' },
+  { href: '/about/', label: 'About' },
+  { href: '/legal-services/', label: 'Practice Areas', mega: true },
+  { href: '/attorneys-lawyers-chennai/bail/', label: 'Bail' },
+  { href: '/faq/', label: 'FAQ' },
+  { href: '/news/', label: 'News' },
+  { href: '/contact/', label: 'Contact' },
+];
+const isActive = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-IN">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <title>{title}</title>
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
+    <meta name="theme-color" content="#0b1f3a" />
     <link rel="icon" type="image/webp" href="/favicon.webp" />
+    <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable site summary" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:locale" content="en_IN" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    {published && <meta property="article:published_time" content={published} />}
+    {modified && <meta property="article:modified_time" content={modified} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="geo.region" content="IN-TN" />
+    <meta name="geo.placename" content="Chennai" />
+    <meta name="geo.position" content={`${SITE.geo.lat};${SITE.geo.lng}`} />
+    <script type="application/ld+json" set:html={JSON.stringify({ '@context': 'https://schema.org', '@graph': graph.map(({ '@context': _c, ...rest }: any) => rest) })} />
   </head>
   <body class="bg-cream text-ink font-sans antialiased">
-    <header class="bg-navy text-cream sticky top-0 z-50">
-      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="/" class="font-serif text-xl">Rajendra Criminal Law</a>
-        <nav class="hidden md:flex gap-8 text-sm">
-          <a href="/" class="hover:text-gold">Home</a>
-          <a href="/about" class="hover:text-gold">About</a>
-          <a href="/practice" class="hover:text-gold">Practice</a>
-          <a href="/contact" class="hover:text-gold">Contact</a>
-        </nav>
-        <a href="tel:+919994287060" class="bg-crimson text-white text-sm px-5 py-2 rounded-sm">Call Now</a>
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <header class="sticky top-0 z-50 shadow-md" id="site-header">
+      <div class="bg-navy text-cream/90 text-xs sm:text-sm border-b border-white/10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between gap-3">
+          <p class="hidden md:block text-cream/70">{SITE.hours[0]} · {SITE.hours[2]}</p>
+          <div class="flex items-center gap-4 sm:gap-6 ml-auto">
+            <a href={`tel:${SITE.phoneTel}`} class="hover:text-gold font-medium" aria-label={`Call ${SITE.phoneDisplay}`}>
+              <span aria-hidden="true">☎</span> {SITE.phoneDisplay}
+            </a>
+            <a href={`mailto:${SITE.email}`} class="hover:text-gold hidden sm:inline">{SITE.email}</a>
+            <a data-wa href={waLink(canonicalUrl)} class="hover:text-gold" rel="noopener" target="_blank">WhatsApp</a>
+          </div>
+        </div>
       </div>
+
+      <div class="bg-white border-b border-navy/10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-[72px]">
+          <a href="/" class="flex items-center gap-3 shrink-0" aria-label={`${SITE.name} – home`}>
+            <img src="/logo.webp" alt="" width="52" height="52" class="h-[44px] sm:h-[52px] w-auto shrink-0" />
+            <span class="leading-tight">
+              <span class="block font-serif text-[15px] sm:text-xl text-navy font-bold">{SITE.name}</span>
+              <span class="block text-[10px] sm:text-xs tracking-wide text-crimson uppercase">
+                <span class="sm:hidden">Criminal Defence · Chennai</span><span class="hidden sm:inline">{SITE.tagline}</span>
+              </span>
+            </span>
+          </a>
+
+          <nav class="hidden lg:block" aria-label="Primary">
+            <ul class="flex items-center gap-1">
+              {nav.map((n) => (
+                <li class:list={['relative', n.mega && 'group']}>
+                  <a
+                    href={n.href}
+                    class:list={['nav-link', isActive(n.href) && 'is-active']}
+                    aria-current={n.href === path ? 'page' : undefined}
+                    aria-haspopup={n.mega ? 'true' : undefined}
+                  >{n.label}{n.mega && <span aria-hidden="true" class="ml-1 text-[10px]">▾</span>}</a>
+                  {n.mega && (
+                    <div class="mega group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                      <p class="text-xs uppercase tracking-widest text-crimson mb-3">Criminal law topics</p>
+                      <ul class="grid grid-cols-2 gap-x-8 gap-y-1">
+                        {FEATURED.map((c) => (
+                          <li><a href={catUrl(c)} class="block py-1.5 text-sm text-navy hover:text-crimson">{c.name}</a></li>
+                        ))}
+                      </ul>
+                      <a href="/legal-services/" class="mt-4 inline-block text-sm font-semibold text-crimson hover:underline">All legal services →</a>
+                    </div>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div class="flex items-center gap-2">
+            <a href={`tel:${SITE.phoneTel}`} class="hidden sm:inline-flex bg-crimson hover:bg-[#7e1526] text-white text-sm font-semibold px-5 py-2.5 rounded-sm transition">Call now</a>
+            <button id="menu-btn" type="button" class="lg:hidden p-2 text-navy" aria-controls="mobile-menu" aria-expanded="false" aria-label="Open menu">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <nav id="mobile-menu" class="lg:hidden hidden bg-white border-b border-navy/10 max-h-[calc(100vh-110px)] overflow-y-auto" aria-label="Mobile">
+        <ul class="px-4 py-3 divide-y divide-navy/10">
+          {nav.map((n) => (
+            <li><a href={n.href} class="block py-3 text-navy font-medium">{n.label}</a></li>
+          ))}
+          <li class="py-3">
+            <p class="text-xs uppercase tracking-widest text-crimson mb-2">Criminal law topics</p>
+            <ul class="grid grid-cols-2 gap-x-4">
+              {FEATURED.slice(0, 10).map((c) => (
+                <li><a href={catUrl(c)} class="block py-1.5 text-sm text-ink/80">{c.name}</a></li>
+              ))}
+            </ul>
+          </li>
+          <li class="py-4"><a href={`tel:${SITE.phoneTel}`} class="block text-center bg-crimson text-white font-semibold py-3 rounded-sm">Call {SITE.phoneDisplay}</a></li>
+        </ul>
+      </nav>
     </header>
-    <main>
+
+    <main id="main">
       <slot />
     </main>
-    <footer class="bg-navy text-cream/70 py-12 mt-20 text-center text-sm">
-      <p>Rajendra Criminal Law Firm · West Mogappair, Chennai 600037</p>
-      <p class="mt-2">+91 99942 87060 · criminaladvocate.in@gmail.com</p>
+
+    <footer class="bg-navy text-cream/80 mt-20" itemscope itemtype="https://schema.org/WPFooter">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 py-14 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
+        <div>
+          <a href="/" class="flex items-center gap-3 mb-4">
+            <img src="/logo.webp" alt="" width="48" height="48" class="h-12 w-auto bg-white rounded-sm p-1" loading="lazy" />
+            <span class="font-serif text-lg text-white font-bold leading-tight">{SITE.name}</span>
+          </a>
+          <p class="text-sm leading-relaxed">Criminal defence practice in Chennai, appearing before the Madras High Court and courts in Tamil Nadu. This website offers general legal information.</p>
+        </div>
+
+        <nav aria-label="Practice areas">
+          <h2 class="footer-h">Practice areas</h2>
+          <ul class="space-y-2 text-sm">
+            {FEATURED.slice(0, 8).map((c) => (<li><a href={catUrl(c)} class="hover:text-gold">{c.name}</a></li>))}
+            <li><a href="/legal-services/" class="text-gold hover:underline">All legal services →</a></li>
+          </ul>
+        </nav>
+
+        <nav aria-label="Quick links">
+          <h2 class="footer-h">Explore</h2>
+          <ul class="space-y-2 text-sm">
+            <li><a href="/about/" class="hover:text-gold">About the firm</a></li>
+            <li><a href="/best-criminal-advocates-chennai/" class="hover:text-gold">Criminal advocates in Chennai</a></li>
+            <li><a href="/the-ultimate-guide-to-bail-in-chennai-2024-2025/" class="hover:text-gold">Guide to bail in Chennai</a></li>
+            <li><a href="/faq/" class="hover:text-gold">Frequently asked questions</a></li>
+            <li><a href="/news/" class="hover:text-gold">Law news</a></li>
+            <li><a href="/legal-consultants-chennai/" class="hover:text-gold">Legal consultants</a></li>
+            <li><a href="/contact/" class="hover:text-gold">Contact</a></li>
+          </ul>
+        </nav>
+
+        <address class="not-italic text-sm space-y-3">
+          <h2 class="footer-h">Contact</h2>
+          <p>{SITE.address.street},<br />{SITE.address.locality} – {SITE.address.postalCode}, {SITE.address.region}</p>
+          <p><strong class="text-white">Madras High Court office</strong><br />{SITE.highCourtOffice}</p>
+          <p>
+            <a href={`tel:${SITE.phoneTel}`} class="hover:text-gold">{SITE.phoneDisplay}</a><br />
+            <a href={`mailto:${SITE.email}`} class="hover:text-gold break-all">{SITE.email}</a>
+          </p>
+          <p class="text-cream/60">{SITE.hours.join(' · ')}</p>
+          <a href={`https://www.google.com/maps/search/?api=1&query=${SITE.geo.lat},${SITE.geo.lng}`} class="inline-block text-gold hover:underline" rel="noopener" target="_blank">View on Google Maps →</a>
+        </address>
+      </div>
+
+      <div class="border-t border-white/10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 text-xs leading-relaxed text-cream/60 space-y-3" id="disclaimer">
+          <h2 class="text-sm font-semibold text-cream/90">Disclaimer — Bar Council of India rules</h2>
+          <p>
+            In accordance with the rules of the Bar Council of India, advocates are not permitted to solicit work or advertise through a website. This website is provided solely for
+            information. Nothing here is an advertisement, a solicitation, an invitation or an inducement to seek legal services, and it does not create an advocate–client relationship.
+          </p>
+          <p>
+            The content is general legal information, accurate as of its publication date; laws change and it must not be relied on as legal advice. Please obtain advice specific to your
+            situation from a qualified advocate before acting. Past matters are not a guide to the outcome of any other matter, and no outcome is promised or guaranteed. By using this site you confirm that
+            you have accessed it voluntarily to obtain information about the firm.
+          </p>
+        </div>
+        <div class="border-t border-white/10 py-5 text-center text-xs text-cream/50">
+          © {new Date().getFullYear()} {SITE.name}, Chennai. All rights reserved.
+        </div>
+      </div>
     </footer>
+
+    <div class="fab-wrap">
+      <a id="fab-mail" href={mailLink(canonicalUrl)} class="fab fab-mail" aria-label="Email the firm" title="Email">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>
+      </a>
+      <a id="fab-wa" data-wa href={waLink(canonicalUrl)} class="fab fab-wa" aria-label="Chat on WhatsApp" title="WhatsApp" target="_blank" rel="noopener">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5a9.5 9.5 0 0 0-8.1 14.4L2.5 21.5l4.7-1.2A9.500 9.500 0 1 0 12 2.500Z" /><path d="M8.800 8.200c.3 2.700 2.900 5.300 5.600 5.600l1.400-1.400-2-1-.8.8a4.600 4.600 0 0 1-2.100-2.100l.8-.8-1-2Z" fill="currentColor" stroke="none" /></svg>
+      </a>
+    </div>
+
+    <script is:inline>
+      (function () {
+        var url = window.location.href.split('#')[0];
+        var msg = encodeURIComponent('Hello Rajendra Criminal Law Firm,\n\nI would like information about a criminal law matter.\n\nPage: ' + url);
+        document.querySelectorAll('[data-wa]').forEach(function (a) { a.href = 'https://wa.me/919994287060?text=' + msg; });
+        var m = document.getElementById('fab-mail');
+        if (m) m.href = 'mailto:criminaladvocate.in@gmail.com?subject=' + encodeURIComponent('Enquiry from criminaladvocate.in') + '&body=' + encodeURIComponent('Hello,\n\nI would like information about a criminal law matter.\n\nPage: ' + url);
+        var b = document.getElementById('menu-btn'), p = document.getElementById('mobile-menu');
+        if (b && p) b.addEventListener('click', function () {
+          var open = p.classList.toggle('hidden') === false;
+          b.setAttribute('aria-expanded', String(open));
+          b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+        });
+      })();
+    </script>
   </body>
 </html>
