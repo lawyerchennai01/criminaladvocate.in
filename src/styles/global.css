@@ -123,3 +123,17 @@ body {
 .prose-legal th { background: var(--navy); color: #fff; }
 .card-link { display: block; background: #fff; border: 1px solid rgba(11,31,58,.1); padding: 1.1rem 1.25rem; transition: border-color .2s, transform .2s, box-shadow .2s; }
 .card-link:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(11,31,58,.1); }
+
+/* ---------- FAQ accordion ---------- */
+.prose-legal .faq { margin-top: 1.25rem; border-top: 1px solid rgba(11,31,58,.15); }
+.prose-legal details { border-bottom: 1px solid rgba(11,31,58,.15); background: #fff; }
+.prose-legal details + details { margin-top: 0; }
+.prose-legal summary { cursor: pointer; list-style: none; padding: 1rem 2.75rem 1rem 1.1rem; font-weight: 700; color: var(--navy); position: relative; line-height: 1.5; }
+.prose-legal summary::-webkit-details-marker { display: none; }
+.prose-legal summary::after { content: '+'; position: absolute; right: 1.1rem; top: 50%; transform: translateY(-50%); font-size: 1.4rem; color: var(--crimson); transition: transform .2s; }
+.prose-legal details[open] > summary { background: rgba(212,175,55,.12); }
+.prose-legal details[open] > summary::after { content: '\2212'; }
+.prose-legal summary:hover { background: rgba(212,175,55,.08); }
+.prose-legal details > div, .prose-legal details > p { padding: .25rem 1.1rem 1.1rem; }
+.prose-legal details > div > * + * { margin-top: .8rem; }
+.prose-legal summary strong { font-weight: 700; }
