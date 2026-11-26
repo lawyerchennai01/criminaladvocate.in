@@ -1,0 +1,43 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Rajendra Criminal Law Firm — Senior criminal advocates in Chennai." } = Astro.props;
+const site = "https://criminaladvocate.in";
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/webp" href="/favicon.webp" />
+  </head>
+  <body class="bg-cream text-ink font-sans antialiased">
+    <header class="bg-navy text-cream sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/" class="font-serif text-xl">Rajendra Criminal Law</a>
+        <nav class="hidden md:flex gap-8 text-sm">
+          <a href="/" class="hover:text-gold">Home</a>
+          <a href="/about" class="hover:text-gold">About</a>
+          <a href="/practice" class="hover:text-gold">Practice</a>
+          <a href="/contact" class="hover:text-gold">Contact</a>
+        </nav>
+        <a href="tel:+919994287060" class="bg-crimson text-white text-sm px-5 py-2 rounded-sm">Call Now</a>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="bg-navy text-cream/70 py-12 mt-20 text-center text-sm">
+      <p>Rajendra Criminal Law Firm · West Mogappair, Chennai 600037</p>
+      <p class="mt-2">+91 99942 87060 · criminaladvocate.in@gmail.com</p>
+    </footer>
+  </body>
+</html>
