@@ -3,24 +3,100 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="Rajendra Criminal Law Firm | Best Criminal Advocates in Chennai">
-  <section class="bg-navy text-cream py-24">
-    <div class="max-w-6xl mx-auto px-6">
-      <h1 class="font-serif text-4xl md:text-6xl leading-tight max-w-3xl">Trusted Criminal Defence in Chennai</h1>
-      <p class="mt-6 text-lg text-cream/80 max-w-2xl">Senior advocates with experience in bail, NDPS, cyber crime, and serious criminal trials before the Madras High Court.</p>
+  <section class="relative bg-navy text-cream overflow-hidden">
+    <div class="absolute inset-0 opacity-20 bg-[url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1600&q=80')] bg-cover bg-center"></div>
+    <div class="relative max-w-6xl mx-auto px-6 py-24 md:py-36">
+      <p class="text-gold tracking-widest text-sm font-medium uppercase mb-4">Madras High Court · Chennai</p>
+      <h1 class="font-serif text-4xl md:text-6xl leading-tight max-w-3xl">
+        Trusted Criminal Defence When Your Freedom Is at Stake
+      </h1>
+      <p class="mt-6 text-lg md:text-xl text-cream/80 max-w-2xl">
+        Senior advocates with two decades of experience in bail, NDPS, cyber crime, and serious criminal trials before the Madras High Court.
+      </p>
       <div class="mt-10 flex flex-wrap gap-4">
-        <a href="tel:+919994287060" class="bg-crimson text-white px-8 py-4 rounded-sm">Call +91 99942 87060</a>
-        <a href="https://wa.me/919994287060" class="border border-gold text-gold px-8 py-4 rounded-sm">WhatsApp</a>
+        <a href="tel:+919994287060" class="bg-crimson hover:bg-crimson/90 text-white px-8 py-4 rounded-sm font-medium transition">
+          Call +91 99942 87060
+        </a>
+        <a id="wa-hero" href="#" class="border border-gold text-gold hover:bg-gold hover:text-navy px-8 py-4 rounded-sm font-medium transition">
+          WhatsApp Consultation
+        </a>
       </div>
     </div>
   </section>
+
   <section class="bg-cream py-20">
-    <div class="max-w-6xl mx-auto px-6 text-center">
-      <h2 class="font-serif text-3xl text-navy mb-8">Core Practice Areas</h2>
-      <div class="grid md:grid-cols-3 gap-6 text-left">
-        <div class="bg-white p-6 border border-navy/10"><h3 class="font-serif text-xl text-navy mb-2">Bail & Anticipatory Bail</h3><p class="text-sm text-ink/80">Urgent applications before Magistrate, Sessions and High Court.</p></div>
-        <div class="bg-white p-6 border border-navy/10"><h3 class="font-serif text-xl text-navy mb-2">NDPS Cases</h3><p class="text-sm text-ink/80">Defence in narcotic drugs matters with focus on procedural compliance.</p></div>
-        <div class="bg-white p-6 border border-navy/10"><h3 class="font-serif text-xl text-navy mb-2">Cyber Crime</h3><p class="text-sm text-ink/80">Online fraud, banking fraud and IT Act cases.</p></div>
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="font-serif text-3xl md:text-4xl text-navy text-center mb-4">Core Practice Areas</h2>
+      <p class="text-center text-ink/70 max-w-2xl mx-auto mb-12">Focused criminal defence under the Bharatiya Nyaya Sanhita and related special laws.</p>
+      
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a href="/practice/bail" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
+          <h3 class="font-serif text-xl text-navy mb-2">Bail & Anticipatory Bail</h3>
+          <p class="text-ink/80 text-sm leading-relaxed">Urgent applications before Magistrate, Sessions and High Court. Immediate assistance in arrest situations.</p>
+        </a>
+        <a href="/practice/ndps" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
+          <h3 class="font-serif text-xl text-navy mb-2">NDPS Cases</h3>
+          <p class="text-ink/80 text-sm leading-relaxed">Defence in narcotic drugs and psychotropic substances matters. Strong challenge to search and seizure.</p>
+        </a>
+        <a href="/practice/cyber-crime" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
+          <h3 class="font-serif text-xl text-navy mb-2">Cyber Crime</h3>
+          <p class="text-ink/80 text-sm leading-relaxed">Online fraud, banking fraud, IT Act cases, and digital evidence challenges.</p>
+        </a>
+        <a href="/practice/financial-fraud" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
+          <h3 class="font-serif text-xl text-navy mb-2">Financial Fraud & Cheating</h3>
+          <p class="text-ink/80 text-sm leading-relaxed">White-collar offences, Section 318 BNS (cheating), forgery and economic offences.</p>
+        </a>
+        <a href="/practice" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
+          <h3 class="font-serif text-xl text-navy mb-2">Serious Offences</h3>
+          <p class="text-ink/80 text-sm leading-relaxed">Murder, attempt to murder, and other grave charges requiring meticulous trial strategy.</p>
+        </a>
+        <a href="/practice" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
+          <h3 class="font-serif text-xl text-navy mb-2">Appeals & Revisions</h3>
+          <p class="text-ink/80 text-sm leading-relaxed">Criminal appeals and revision petitions before the Madras High Court.</p>
+        </a>
       </div>
+    </div>
+  </section>
+
+  <section class="bg-navy text-cream py-20">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-10 text-center">
+        <div>
+          <div class="text-4xl font-serif text-gold mb-2">20+</div>
+          <div class="text-sm uppercase tracking-wider">Years of Practice</div>
+        </div>
+        <div>
+          <div class="text-4xl font-serif text-gold mb-2">24/7</div>
+          <div class="text-sm uppercase tracking-wider">Emergency Assistance</div>
+        </div>
+        <div>
+          <div class="text-4xl font-serif text-gold mb-2">MHC</div>
+          <div class="text-sm uppercase tracking-wider">High Court Expertise</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-cream py-16">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="font-serif text-3xl text-navy mb-4">Facing Criminal Charges?</h2>
+      <p class="text-ink/80 mb-8">Early intervention is critical. Speak with a senior advocate today.</p>
+      <a href="/contact" class="inline-block bg-navy text-cream px-10 py-4 rounded-sm font-medium hover:bg-navy/90 transition">
+        Request Consultation
+      </a>
     </div>
   </section>
 </Layout>
+
+<script>
+  const wa = document.getElementById('wa-hero');
+  if (wa) {
+    const msg = encodeURIComponent(
+      `Hello Rajendra Criminal Law Firm,\n\n` +
+      `I need legal assistance regarding a criminal matter.\n\n` +
+      `Page: ${window.location.href}\n` +
+      `Please contact me.`
+    );
+    wa.href = `https://wa.me/919994287060?text=${msg}`;
+  }
+</script>
