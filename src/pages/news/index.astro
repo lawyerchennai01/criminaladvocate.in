@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { SITE } from '../../data/site';
+import { NEWS, fmtDate } from '../../data/content';
+const schema = [
+  { '@type': 'CollectionPage', name: 'Law news', url: SITE.url + '/news/' },
+  { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url + '/' }, { '@type': 'ListItem', position: 2, name: 'News' }] },
+];
+---
+
+<Layout title="Law News — Madras High Court & Criminal Law Updates" description="Short news items on Madras High Court, Supreme Court and criminal law developments, published by Rajendra Criminal Law Firm for general information." schema={schema}>
+  <section class="bg-navy text-cream">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+      <h1 class="font-serif text-3xl sm:text-4xl font-bold">Law news</h1>
+      <p class="mt-3 text-cream/80">Court and criminal law developments, for general information.</p>
+    </div>
+  </section>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+    <ul class="space-y-3">
+      {NEWS.map((n) => (<li><a href={n.path} class="card-link"><span class="block text-navy font-semibold leading-snug">{n.title}</span><span class="block mt-1 text-xs text-ink/60">{fmtDate(n.date)}</span></a></li>))}
+    </ul>
+  </div>
+</Layout>

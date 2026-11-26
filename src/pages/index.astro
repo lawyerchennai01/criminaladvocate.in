@@ -1,85 +1,117 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { SITE, FEATURED, catUrl } from '../data/site';
+import { POSTS, ITEMS, fmtDate } from '../data/content';
+
+const guidePaths = [
+  '/the-ultimate-guide-to-bail-in-chennai-2024-2025/',
+  '/your-rights-after-an-arrest-in-india-a-step-by-step-legal-guide/',
+  '/default-bail-bnss-section-187-60-90-day-rule/',
+  '/quashing-of-fir-in-chennai-a-guide-to-section-482-crpc/',
+  '/how-to-fight-a-cheque-bounce-case-a-guide-to-section-138-ni-act/',
+  '/can-an-fir-be-quashed-by-the-high-court-heres-how/',
+];
+const guides = guidePaths.map((p) => ITEMS.find((i) => i.path === p)).filter(Boolean) as typeof ITEMS;
+const latest = POSTS.slice(0, 6);
+const blurbs: Record<string, string> = {
+  bail: 'Regular, anticipatory and default bail — procedure, conditions and timelines.',
+  'criminal-defense': 'Defence of criminal cases before trial courts and the Madras High Court.',
+  'arrest-and-custody': 'Rights on arrest, remand, custody and interrogation.',
+  'fir-and-investigation': 'FIR registration, investigation stages and quashing petitions.',
+  'criminal-procedure': 'How a criminal case moves — from complaint to judgment and appeal.',
+  'cyber-crime-law': 'Online fraud, IT Act offences and digital-evidence issues.',
+  'drug-cases': 'NDPS Act matters: search, seizure and procedural safeguards.',
+  'financial-fraud': 'Cheating, forgery, breach of trust and cheque-bounce matters.',
+  'economic-offences': 'White-collar and economic offences, investigation and defence.',
+  'family-law': 'Domestic violence, 498A, custody and related criminal-law issues.',
+  defamation: 'Criminal and civil defamation — notices, complaints and defences.',
+  'real-estate-fraud': 'Property fraud, forged documents and land-related complaints.',
+  'civil-and-human-rights': 'Constitutional and human-rights issues in criminal proceedings.',
+  'technology-theft': 'Data, trade-secret and technology-related offences.',
+};
 ---
 
-<Layout title="Rajendra Criminal Law Firm | Best Criminal Advocates in Chennai">
+<Layout title="Rajendra Criminal Law Firm | Criminal Advocates in Chennai & Madras High Court" description="Criminal defence practice in Chennai appearing before the Madras High Court. Plain-language guides on bail, FIR quashing, NDPS, cyber crime, cheque bounce and more. General information only.">
   <section class="relative bg-navy text-cream overflow-hidden">
-    <div class="absolute inset-0 opacity-30 bg-[url('/office.webp')] bg-cover bg-center"></div>
-    <div class="relative max-w-6xl mx-auto px-6 py-24 md:py-36">
-      <p class="text-gold tracking-widest text-sm font-medium uppercase mb-4">Madras High Court · Chennai</p>
-      <h1 class="font-serif text-4xl md:text-6xl leading-tight max-w-3xl">
-        Trusted Criminal Defence When Your Freedom Is at Stake
-      </h1>
-      <p class="mt-6 text-lg md:text-xl text-cream/80 max-w-2xl">
-        Senior advocates with two decades of experience in bail, NDPS, cyber crime, and serious criminal trials before the Madras High Court.
-      </p>
-      <div class="mt-10 flex flex-wrap gap-4">
-        <a href="tel:+919994287060" class="bg-crimson hover:bg-crimson/90 text-white px-8 py-4 rounded-sm font-medium transition">
-          Call +91 99942 87060
-        </a>
-        <a id="wa-hero" href="#" class="border border-gold text-gold hover:bg-gold hover:text-navy px-8 py-4 rounded-sm font-medium transition">
-          WhatsApp Consultation
-        </a>
+    <div class="absolute inset-0 opacity-[0.07]" style="background-image: repeating-linear-gradient(135deg, #d4af37 0 1px, transparent 1px 22px)"></div>
+    <div class="relative max-w-6xl mx-auto px-4 sm:px-6 py-16 md:py-24 grid lg:grid-cols-[1.3fr_1fr] gap-12 items-center">
+      <div>
+        <p class="text-gold tracking-widest text-xs sm:text-sm font-semibold uppercase mb-4">Madras High Court · Chennai</p>
+        <h1 class="font-serif text-4xl md:text-5xl lg:text-[3.4rem] leading-[1.1] font-bold">Criminal defence, explained clearly and handled seriously.</h1>
+        <p class="mt-6 text-lg text-cream/85 max-w-2xl">Rajendra Criminal Law Firm is a criminal defence practice in Chennai, appearing before the Madras High Court. This site publishes plain-language legal information on bail, FIR and investigation, NDPS, cyber crime, cheque bounce and related matters.</p>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a href={`tel:${SITE.phoneTel}`} class="bg-crimson hover:bg-[#7e1526] text-white px-7 py-3.5 rounded-sm font-semibold transition">Call {SITE.phoneDisplay}</a>
+          <a data-wa href={`https://wa.me/${SITE.whatsapp}`} target="_blank" rel="noopener" class="border border-gold text-gold hover:bg-gold hover:text-navy px-7 py-3.5 rounded-sm font-semibold transition">WhatsApp</a>
+          <a href="/the-ultimate-guide-to-bail-in-chennai-2024-2025/" class="px-7 py-3.5 rounded-sm font-semibold text-cream border border-white/25 hover:bg-white/10 transition">Read the bail guide</a>
+        </div>
       </div>
+      <aside class="bg-white/5 border border-white/15 rounded-sm p-6 backdrop-blur-sm" aria-label="At a glance">
+        <h2 class="font-serif text-xl text-white mb-4">At a glance</h2>
+        <dl class="space-y-3 text-sm">
+          <div><dt class="text-gold uppercase tracking-wider text-[11px]">Practice</dt><dd>Criminal defence and related litigation</dd></div>
+          <div><dt class="text-gold uppercase tracking-wider text-[11px]">Courts</dt><dd>Madras High Court and courts in Chennai</dd></div>
+          <div><dt class="text-gold uppercase tracking-wider text-[11px]">Offices</dt><dd>Mogappair West and Madras High Court, Chennai</dd></div>
+          <div><dt class="text-gold uppercase tracking-wider text-[11px]">Consultation hours</dt><dd>{SITE.hours[0]}<br />{SITE.hours[1]}<br />{SITE.hours[2]}</dd></div>
+        </dl>
+      </aside>
     </div>
   </section>
 
-  <section class="bg-cream py-20">
-    <div class="max-w-6xl mx-auto px-6">
-      <h2 class="font-serif text-3xl md:text-4xl text-navy text-center mb-4">Core Practice Areas</h2>
-      <p class="text-center text-ink/70 max-w-2xl mx-auto mb-12">Focused criminal defence under the Bharatiya Nyaya Sanhita and related special laws.</p>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <a href="/bail" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
-          <h3 class="font-serif text-xl text-navy mb-2">Bail & Anticipatory Bail</h3>
-          <p class="text-ink/80 text-sm leading-relaxed">Urgent applications before Magistrate, Sessions and High Court.</p>
-        </a>
-        <a href="/drug-cases" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
-          <h3 class="font-serif text-xl text-navy mb-2">NDPS / Drug Cases</h3>
-          <p class="text-ink/80 text-sm leading-relaxed">Defence in narcotic drugs matters.</p>
-        </a>
-        <a href="/cyber-crime-law" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
-          <h3 class="font-serif text-xl text-navy mb-2">Cyber Crime</h3>
-          <p class="text-ink/80 text-sm leading-relaxed">Online fraud and IT Act cases.</p>
-        </a>
-        <a href="/financial-fraud" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
-          <h3 class="font-serif text-xl text-navy mb-2">Financial Fraud</h3>
-          <p class="text-ink/80 text-sm leading-relaxed">Cheating, forgery, and economic offences.</p>
-        </a>
-        <a href="/animal-abuse" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
-          <h3 class="font-serif text-xl text-navy mb-2">Animal Abuse</h3>
-          <p class="text-ink/80 text-sm leading-relaxed">Matters under the Prevention of Cruelty to Animals Act.</p>
-        </a>
-        <a href="/legal-services" class="block bg-white p-6 border border-navy/10 hover:border-gold transition">
-          <h3 class="font-serif text-xl text-navy mb-2">View All</h3>
-          <p class="text-ink/80 text-sm leading-relaxed">See all practice areas.</p>
-        </a>
-      </div>
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16" aria-labelledby="areas">
+    <p class="text-crimson text-xs font-semibold uppercase tracking-widest mb-2">Practice areas</p>
+    <h2 id="areas" class="font-serif text-3xl text-navy font-bold mb-8">Criminal law topics we write about</h2>
+    <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {FEATURED.map((c) => (
+        <li>
+          <a href={catUrl(c)} class="card-link h-full">
+            <span class="block font-serif text-lg text-navy font-bold">{c.name}</span>
+            <span class="block mt-1 text-sm text-ink/70">{blurbs[c.slug] ?? `Guides and information on ${c.name.toLowerCase()}.`}</span>
+            <span class="block mt-3 text-xs text-crimson font-semibold">{c.count} {c.count === 1 ? 'article' : 'articles'} →</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <p class="mt-6"><a href="/legal-services/" class="text-crimson font-semibold hover:underline">See all legal services →</a></p>
+  </section>
+
+  <section class="bg-white border-y border-navy/10" aria-labelledby="guides">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-16">
+      <p class="text-crimson text-xs font-semibold uppercase tracking-widest mb-2">Start here</p>
+      <h2 id="guides" class="font-serif text-3xl text-navy font-bold mb-2">If you or a family member is facing a criminal case</h2>
+      <p class="text-ink/70 mb-8 max-w-3xl">These guides explain the process in plain language. They are general information, not advice on your specific case.</p>
+      <ul class="grid md:grid-cols-2 gap-4">
+        {guides.map((g) => (
+          <li><a href={g.path} class="card-link h-full"><span class="block text-navy font-semibold leading-snug">{g.title}</span><span class="block mt-2 text-sm text-ink/70 line-clamp-2">{g.description}</span></a></li>
+        ))}
+      </ul>
     </div>
   </section>
 
-  <section class="bg-navy text-cream py-20">
-    <div class="max-w-6xl mx-auto px-6">
-      <div class="grid md:grid-cols-3 gap-10 text-center">
-        <div><div class="text-4xl font-serif text-gold mb-2">20+</div><div class="text-sm uppercase tracking-wider">Years of Practice</div></div>
-        <div><div class="text-4xl font-serif text-gold mb-2">24/7</div><div class="text-sm uppercase tracking-wider">Emergency Assistance</div></div>
-        <div><div class="text-4xl font-serif text-gold mb-2">MHC</div><div class="text-sm uppercase tracking-wider">High Court Expertise</div></div>
+  <section class="max-w-6xl mx-auto px-4 sm:px-6 py-16" aria-labelledby="latest">
+    <div class="flex items-end justify-between mb-8">
+      <div>
+        <p class="text-crimson text-xs font-semibold uppercase tracking-widest mb-2">Latest</p>
+        <h2 id="latest" class="font-serif text-3xl text-navy font-bold">Recent articles</h2>
       </div>
+      <a href="/attorneys-lawyers-chennai/criminal-defense/" class="text-sm text-crimson font-semibold hover:underline hidden sm:block">All articles →</a>
     </div>
+    <ul class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {latest.map((p) => (
+        <li><a href={p.path} class="card-link h-full"><span class="block text-xs text-ink/60">{fmtDate(p.date)}</span><span class="block mt-1 text-navy font-semibold leading-snug">{p.title}</span></a></li>
+      ))}
+    </ul>
   </section>
 
-  <section class="bg-cream py-16">
-    <div class="max-w-4xl mx-auto px-6 text-center">
-      <h2 class="font-serif text-3xl text-navy mb-4">Facing Criminal Charges?</h2>
-      <p class="text-ink/80 mb-8">Early intervention is critical. Speak with a senior advocate today.</p>
-      <a href="/contact" class="inline-block bg-navy text-cream px-10 py-4 rounded-sm font-medium hover:bg-navy/90 transition">Request Consultation</a>
+  <section class="max-w-6xl mx-auto px-4 sm:px-6">
+    <div class="bg-navy text-cream rounded-sm p-8 sm:p-12 grid md:grid-cols-[1.4fr_1fr] gap-8 items-center">
+      <div>
+        <h2 class="font-serif text-2xl sm:text-3xl text-white font-bold">Questions about a criminal law matter?</h2>
+        <p class="mt-3 text-cream/80">Read the <a href="/faq/" class="text-gold underline">frequently asked questions</a>, or contact the firm for general information. This website does not solicit work and does not create an advocate–client relationship.</p>
+      </div>
+      <div class="flex flex-wrap gap-3 md:justify-end">
+        <a href={`tel:${SITE.phoneTel}`} class="bg-crimson hover:bg-[#7e1526] text-white px-6 py-3 rounded-sm font-semibold">Call</a>
+        <a href="/contact/" class="border border-gold text-gold hover:bg-gold hover:text-navy px-6 py-3 rounded-sm font-semibold">Contact details</a>
+      </div>
     </div>
   </section>
 </Layout>
-
-<script>
-  const wa = document.getElementById('wa-hero');
-  if (wa) {
-    const msg = encodeURIComponent(`Hello Rajendra Criminal Law Firm,\n\nI need legal assistance regarding a criminal matter.\n\nPage: ${window.location.href}\nPlease contact me.`);
-    wa.href = `https://wa.me/919994287060?text=${msg}`;
-  }
-</script>

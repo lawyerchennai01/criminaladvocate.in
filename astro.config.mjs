@@ -4,5 +4,8 @@ import tailwind from '@astrojs/tailwind';
 export default defineConfig({
   integrations: [tailwind()],
   site: 'https://criminaladvocate.in',
-  output: 'static'
+  output: 'static',
+  // The live WordPress site uses trailing slashes; keep URLs identical.
+  trailingSlash: 'always',
+  build: { format: 'directory' },
 });

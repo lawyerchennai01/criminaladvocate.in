@@ -1,0 +1,188 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE, CATEGORIES, catUrl, catBySlug } from '../data/site';
+import { ITEMS, POSTS, slugOf, enrich, categoryChain, itemCats, fmtDate, faqPairs, type Item } from '../data/content';
+
+export function getStaticPaths() {
+  const pages = ITEMS.map((item) => ({ params: { slug: slugOf(item.path) }, props: { kind: 'item', item } }));
+  const cats = CATEGORIES.map((cat) => ({ params: { slug: `attorneys-lawyers-chennai/${cat.path}` }, props: { kind: 'category', cat } }));
+  return [...pages, ...cats];
+}
+
+const { kind, item, cat } = Astro.props as { kind: 'item' | 'category'; item?: Item; cat?: (typeof CATEGORIES)[number] };
+const url = SITE.url + Astro.url.pathname;
+type Crumb = { name: string; href?: string };
+const breadcrumb = (trail: Crumb[]) => ({
+  '@type': 'BreadcrumbList',
+  itemListElement: trail.map((t, i) => ({ '@type': 'ListItem', position: i + 1, name: t.name, ...(t.href ? { item: SITE.url + t.href } : {}) })),
+});
+
+let title = '', description = '', h1 = '', published = '', modified = '';
+let trail: Crumb[] = [];
+let schema: object[] = [];
+let bodyHtml = '';
+let toc: { id: string; text: string }[] = [];
+let related: Item[] = [];
+let listing: Item[] = [];
+let subcats: typeof CATEGORIES = [];
+let chips: ReturnType<typeof itemCats> = [];
+let heroImg: Item['image'] = null;
+let isServices = false;
+let ogType: 'website' | 'article' = 'website';
+
+if (kind === 'item' && item) {
+  const e = enrich(item.html);
+  bodyHtml = e.html;
+  toc = e.toc.length >= 4 ? e.toc : [];
+  h1 = item.title;
+  title = item.seoTitle || item.title;
+  description = item.description;
+  published = item.date;
+  modified = item.modified;
+  chips = itemCats(item);
+  heroImg = item.image && !item.html.includes(item.image.src.replace(/\.webp$/, '')) ? item.image : null;
+  const primary = catBySlug(item.primary ?? '') ?? chips[0];
+  trail = [{ name: 'Home', href: '/' }];
+  if (item.type === 'news') trail.push({ name: 'News', href: '/news/' });
+  else if (item.type === 'post') categoryChain(primary).forEach((c) => trail.push({ name: c.name, href: catUrl(c) }));
+  trail.push({ name: item.title });
+  if (item.type !== 'page') {
+    ogType = 'article';
+    schema.push({
+      '@type': item.type === 'news' ? 'NewsArticle' : 'BlogPosting',
+      '@id': url + '#article',
+      headline: item.title.slice(0, 110),
+      description,
+      datePublished: item.date,
+      dateModified: item.modified || item.date,
+      mainEntityOfPage: url,
+      inLanguage: 'en-IN',
+      wordCount: item.words,
+      author: { '@id': SITE.url + '/#legalservice' },
+      publisher: { '@id': SITE.url + '/#legalservice' },
+      ...(item.image ? { image: SITE.url + item.image.src } : {}),
+      ...(primary && item.type === 'post' ? { articleSection: primary.name } : {}),
+    });
+    related =
+      item.type === 'news'
+        ? ITEMS.filter((p) => p.type === 'news' && p.path !== item.path).slice(0, 4)
+        : POSTS.filter((p) => p.path !== item.path && item.primary && p.cats.includes(item.primary)).slice(0, 4);
+  }
+  if (item.path === '/faq/') {
+    const pairs = faqPairs(item.html);
+    if (pairs.length) schema.push({ '@type': 'FAQPage', mainEntity: pairs.map((p) => ({ '@type': 'Question', name: p.q, acceptedAnswer: { '@type': 'Answer', text: p.a } })) });
+  }
+  if (item.path === '/legal-services/') isServices = true;
+  schema.push(breadcrumb(trail.map((t, i) => (i === trail.length - 1 ? { name: t.name } : t))));
+} else if (cat) {
+  h1 = cat.name;
+  title = `${cat.name}: Legal Guides & Information in Chennai`;
+  description = `Guides and legal information on ${cat.name} in Chennai and the Madras High Court from Rajendra Criminal Law Firm. General information, not legal advice.`;
+  listing = POSTS.filter((p) => p.cats.includes(cat.slug));
+  subcats = CATEGORIES.filter((c) => c.parent === cat.slug);
+  const chain = categoryChain(cat);
+  trail = [{ name: 'Home', href: '/' }, { name: 'Legal services', href: '/legal-services/' }, ...chain.map((c, i) => (i === chain.length - 1 ? { name: c.name } : { name: c.name, href: catUrl(c) }))];
+  schema.push(breadcrumb(trail.map((t, i) => (i === trail.length - 1 ? { name: t.name } : t))));
+  schema.push({ '@type': 'CollectionPage', '@id': url + '#collection', name: h1, url, isPartOf: { '@id': SITE.url + '/#website' } });
+}
+const showCta = kind === 'category' || (item && (item.type !== 'page' || item.path === '/legal-services/'));
+---
+
+<Layout title={title} description={description} schema={schema} ogType={ogType} image={heroImg?.src ?? item?.image?.src} published={published || undefined} modified={modified || undefined}>
+  <section class="bg-navy text-cream">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
+      <nav aria-label="Breadcrumb" class="text-xs text-cream/70 mb-5">
+        <ol class="flex flex-wrap gap-x-2 gap-y-1">
+          {trail.map((t, i) => (
+            <li class="flex gap-2">
+              {t.href ? <a href={t.href} class="hover:text-gold hover:underline underline-offset-2">{t.name}</a> : <span aria-current="page" class="text-cream/90">{t.name}</span>}
+              {i < trail.length - 1 && <span aria-hidden="true">›</span>}
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <h1 class="font-serif text-3xl sm:text-4xl lg:text-[2.6rem] leading-tight font-bold">{h1}</h1>
+      {item && item.type !== 'page' && (
+        <p class="mt-4 text-sm text-cream/70">
+          Published <time datetime={item.date}>{fmtDate(item.date)}</time>
+          {item.modified && item.modified !== item.date && <> · Updated <time datetime={item.modified}>{fmtDate(item.modified)}</time></>}
+          · {Math.max(1, Math.round(item.words / 220))} min read
+        </p>
+      )}
+      {kind === 'category' && <p class="mt-4 text-cream/80 max-w-2xl">Legal information on {cat!.name} — {listing.length} {listing.length === 1 ? 'article' : 'articles'}.</p>}
+    </div>
+  </section>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-10">
+    {kind === 'item' && item && (
+      <article>
+        {heroImg && <img src={heroImg.src} alt={heroImg.alt} width={heroImg.w} height={heroImg.h} class="w-full h-auto rounded-sm mb-8" decoding="async" />}
+        {toc.length > 0 && (
+          <nav aria-label="In this article" class="bg-white border border-navy/10 border-l-4 border-l-gold p-5 mb-8">
+            <p class="font-serif text-navy font-bold mb-2">In this article</p>
+            <ol class="list-decimal pl-5 space-y-1 text-sm sm:columns-2 gap-8">
+              {toc.map((t) => <li class="break-inside-avoid"><a href={`#${t.id}`} class="text-navy hover:text-crimson">{t.text}</a></li>)}
+            </ol>
+          </nav>
+        )}
+        <div class="prose-legal" set:html={bodyHtml} />
+
+        {isServices && (
+          <div class="mt-12">
+            <h2 class="font-serif text-2xl text-navy mb-5">Browse criminal law topics</h2>
+            <ul class="grid sm:grid-cols-2 gap-3">
+              {CATEGORIES.filter((c) => !c.parent && c.count > 0).map((c) => (<li><a href={catUrl(c)} class="card-link text-navy font-medium">{c.name} <span class="text-xs text-ink/50">· {c.count}</span></a></li>))}
+            </ul>
+          </div>
+        )}
+
+        {chips.length > 0 && item.type === 'post' && (
+          <p class="mt-10 text-sm flex flex-wrap gap-2 items-center">
+            <span class="text-ink/60">Filed under:</span>
+            {chips.map((c) => <a href={catUrl(c)} class="px-3 py-1 bg-white border border-navy/15 hover:border-gold text-navy rounded-full">{c.name}</a>)}
+          </p>
+        )}
+
+        {showCta && (
+          <aside class="mt-12 bg-navy text-cream p-6 sm:p-8 rounded-sm" aria-label="Contact">
+            <h2 class="font-serif text-xl text-white mb-2">Need information about a criminal law matter?</h2>
+            <p class="text-sm text-cream/80 mb-5">You may contact the firm for general information. This site is informational and does not solicit work or create an advocate–client relationship.</p>
+            <div class="flex flex-wrap gap-3">
+              <a href={`tel:${SITE.phoneTel}`} class="bg-crimson hover:bg-[#7e1526] text-white text-sm font-semibold px-5 py-2.5 rounded-sm">Call {SITE.phoneDisplay}</a>
+              <a data-wa href={`https://wa.me/${SITE.whatsapp}`} class="border border-gold text-gold hover:bg-gold hover:text-navy text-sm font-semibold px-5 py-2.5 rounded-sm" target="_blank" rel="noopener">WhatsApp</a>
+              <a href="/contact/" class="border border-white/30 text-white hover:bg-white/10 text-sm font-semibold px-5 py-2.5 rounded-sm">Contact details</a>
+            </div>
+          </aside>
+        )}
+
+        {related.length > 0 && (
+          <section class="mt-14" aria-labelledby="related">
+            <h2 id="related" class="font-serif text-2xl text-navy mb-5">Related reading</h2>
+            <ul class="grid sm:grid-cols-2 gap-3">
+              {related.map((r) => (<li><a href={r.path} class="card-link"><span class="block text-navy font-semibold leading-snug">{r.title}</span><span class="block mt-1 text-xs text-ink/60">{fmtDate(r.date)}</span></a></li>))}
+            </ul>
+          </section>
+        )}
+      </article>
+    )}
+
+    {kind === 'category' && (
+      <>
+        {subcats.length > 0 && (
+          <div class="mb-10">
+            <h2 class="font-serif text-xl text-navy mb-3">Sub-topics</h2>
+            <ul class="flex flex-wrap gap-2">{subcats.map((c) => <li><a href={catUrl(c)} class="px-4 py-2 bg-white border border-navy/15 hover:border-gold text-navy rounded-full text-sm">{c.name} · {c.count}</a></li>)}</ul>
+          </div>
+        )}
+        {listing.length === 0 ? (
+          <p class="text-ink/70">Articles for this topic will be added soon. Browse <a href="/legal-services/" class="text-crimson underline">all legal services</a>.</p>
+        ) : (
+          <ul class="space-y-3">
+            {listing.map((p) => (<li><a href={p.path} class="card-link"><span class="block text-navy font-semibold leading-snug">{p.title}</span><span class="block mt-1 text-sm text-ink/70 line-clamp-2">{p.description}</span></a></li>))}
+          </ul>
+        )}
+        <p class="mt-10 text-sm text-ink/60">General legal information only; it is not legal advice and does not create an advocate–client relationship.</p>
+      </>
+    )}
+  </div>
+</Layout>

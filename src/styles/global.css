@@ -85,3 +85,41 @@ body {
   @apply bg-navy hover:bg-navy/90 text-cream;
   box-shadow: 0 4px 14px rgba(11, 31, 58, 0.35);
 }
+
+/* ---------- layout chrome ---------- */
+.skip-link { position: absolute; left: -9999px; top: 0; background: var(--gold); color: var(--navy); padding: .75rem 1rem; z-index: 100; font-weight: 600; }
+.skip-link:focus { left: 0; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.nav-link { display: inline-block; white-space: nowrap; padding: .5rem .85rem; font-size: .9rem; font-weight: 500; color: var(--navy); border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+.nav-link:hover, .nav-link.is-active { color: var(--crimson); border-color: var(--gold); }
+.mega { position: absolute; left: -9rem; top: 100%; width: 34rem; padding: 1.5rem; background: #fff; border-top: 3px solid var(--gold); box-shadow: 0 18px 40px rgba(11,31,58,.18); visibility: hidden; opacity: 0; transition: opacity .15s; }
+.footer-h { font-family: Georgia, 'Times New Roman', serif; color: #fff; font-size: 1.05rem; margin-bottom: 1rem; padding-bottom: .5rem; border-bottom: 1px solid rgba(212,175,55,.5); display: inline-block; }
+
+/* ---------- floating contact buttons (bottom right) ---------- */
+.fab-wrap { position: fixed; right: 18px; bottom: 18px; z-index: 60; display: flex; flex-direction: column; gap: 14px; }
+.fab { position: relative; display: grid; place-items: center; width: 58px; height: 58px; border-radius: 50%; color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.28); transition: transform .2s; }
+.fab-wa { background: #25d366; animation: fab-ripple-green 2s ease-out infinite; }
+.fab-mail { background: var(--navy); border: 1px solid rgba(212,175,55,.6); animation: fab-ripple-navy 2s ease-out infinite .6s; }
+.fab:hover, .fab:focus-visible { animation: wobble .7s ease-in-out, shake .5s ease-in-out .7s; transform: scale(1.08); }
+@keyframes fab-ripple-green { 0% { box-shadow: 0 6px 18px rgba(0,0,0,.28), 0 0 0 0 rgba(37,211,102,.6); } 70%,100% { box-shadow: 0 6px 18px rgba(0,0,0,.28), 0 0 0 20px rgba(37,211,102,0); } }
+@keyframes fab-ripple-navy { 0% { box-shadow: 0 6px 18px rgba(0,0,0,.28), 0 0 0 0 rgba(212,175,55,.55); } 70%,100% { box-shadow: 0 6px 18px rgba(0,0,0,.28), 0 0 0 20px rgba(212,175,55,0); } }
+@media (prefers-reduced-motion: reduce) { .fab, .fab:hover, .contact-btn, .animate-ripple { animation: none !important; } html { scroll-behavior: auto; } }
+
+/* ---------- article typography ---------- */
+.prose-legal { font-size: 1.05rem; line-height: 1.8; color: #1f2937; }
+.prose-legal > * + * { margin-top: 1.1rem; }
+.prose-legal h2 { font-family: Georgia, serif; color: var(--navy); font-size: 1.6rem; line-height: 1.3; margin-top: 2.5rem; padding-bottom: .4rem; border-bottom: 2px solid rgba(212,175,55,.6); scroll-margin-top: 140px; }
+.prose-legal h3 { font-family: Georgia, serif; color: var(--navy); font-size: 1.25rem; margin-top: 1.8rem; scroll-margin-top: 140px; }
+.prose-legal h4, .prose-legal h5, .prose-legal h6 { color: var(--navy); font-weight: 700; margin-top: 1.4rem; scroll-margin-top: 140px; }
+.prose-legal a { color: var(--crimson); text-decoration: underline; text-underline-offset: 3px; }
+.prose-legal a:hover { color: var(--navy); }
+.prose-legal ul { list-style: disc; padding-left: 1.5rem; }
+.prose-legal ol { list-style: decimal; padding-left: 1.5rem; }
+.prose-legal li + li { margin-top: .4rem; }
+.prose-legal blockquote { border-left: 4px solid var(--gold); background: #fff; padding: 1rem 1.25rem; font-style: italic; color: #374151; }
+.prose-legal img { max-width: 100%; height: auto; border-radius: 4px; margin-inline: auto; }
+.prose-legal table { display: block; overflow-x: auto; width: 100%; border-collapse: collapse; font-size: .95rem; }
+.prose-legal th, .prose-legal td { border: 1px solid rgba(11,31,58,.18); padding: .6rem .8rem; text-align: left; vertical-align: top; }
+.prose-legal th { background: var(--navy); color: #fff; }
+.card-link { display: block; background: #fff; border: 1px solid rgba(11,31,58,.1); padding: 1.1rem 1.25rem; transition: border-color .2s, transform .2s, box-shadow .2s; }
+.card-link:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(11,31,58,.1); }
