@@ -21,6 +21,19 @@ export const HANDMADE = new Set(['/', '/contact/', '/contact-us/']);
 export const ITEMS = (data.items as Item[]).filter((i) => !HANDMADE.has(i.path));
 export const POSTS = ITEMS.filter((i) => i.type === 'post');
 export const NEWS = ITEMS.filter((i) => i.type === 'news');
+// Internal-linking aids. Hub pages get a topic grid plus guides; category pages get pinned key guides.
+export const HUB_PATHS = new Set(['/legal-services/', '/about/', '/faq/', '/legal-consultants-chennai/']);
+export const START_GUIDES = [
+  '/the-ultimate-guide-to-bail-in-chennai-2024-2025/',
+  '/your-rights-after-an-arrest-in-india-a-step-by-step-legal-guide/',
+  '/custodial-interrogation-in-criminal-cases-when-police-can-demand-arrest-and-how-to-avoid-it/',
+];
+export const CATEGORY_PINS: Record<string, string[]> = {
+  bail: ['/the-ultimate-guide-to-bail-in-chennai-2024-2025/', '/default-bail-bnss-section-187-60-90-day-rule/'],
+  'anticipatory-bail': ['/the-ultimate-guide-to-bail-in-chennai-2024-2025/'],
+  'arrest-and-custody': START_GUIDES.slice(1),
+  'criminal-defense': START_GUIDES,
+};
 export const slugOf = (p: string) => p.replace(/^\/|\/$/g, '');
 
 const slugify = (t: string) =>

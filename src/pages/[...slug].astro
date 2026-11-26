@@ -1,7 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { SITE, CATEGORIES, catUrl, catBySlug } from '../data/site';
-import { ITEMS, POSTS, slugOf, enrich, categoryChain, itemCats, fmtDate, faqPairs, type Item } from '../data/content';
+import { ITEMS, POSTS, NEWS, HUB_PATHS, START_GUIDES, CATEGORY_PINS, slugOf, enrich, categoryChain, itemCats, fmtDate, faqPairs, type Item } from '../data/content';
 
 export function getStaticPaths() {
   const pages = ITEMS.map((item) => ({ params: { slug: slugOf(item.path) }, props: { kind: 'item', item } }));
@@ -28,6 +28,8 @@ let subcats: typeof CATEGORIES = [];
 let chips: ReturnType<typeof itemCats> = [];
 let heroImg: Item['image'] = null;
 let isServices = false;
+let keyGuides: Item[] = [];
+const startGuides = START_GUIDES.map((p) => ITEMS.find((i) => i.path === p)).filter(Boolean) as Item[];
 let ogType: 'website' | 'article' = 'website';
 
 if (kind === 'item' && item) {
@@ -63,22 +65,24 @@ if (kind === 'item' && item) {
       ...(item.image ? { image: SITE.url + item.image.src } : {}),
       ...(primary && item.type === 'post' ? { articleSection: primary.name } : {}),
     });
-    related =
-      item.type === 'news'
-        ? ITEMS.filter((p) => p.type === 'news' && p.path !== item.path).slice(0, 4)
-        : POSTS.filter((p) => p.path !== item.path && item.primary && p.cats.includes(item.primary)).slice(0, 4);
+    // Related reading is the next four items in the same list, wrapping around, so every item
+    // receives the same number of inbound links instead of the newest few collecting them all.
+    const pool = item.type === 'news' ? NEWS : POSTS.filter((p) => item.primary && p.cats.includes(item.primary));
+    const at = pool.findIndex((p) => p.path === item.path);
+    if (at >= 0) related = Array.from({ length: Math.min(4, pool.length - 1) }, (_, k) => pool[(at + 1 + k) % pool.length]);
   }
   if (item.path === '/faq/') {
     const pairs = faqPairs(item.html);
     if (pairs.length) schema.push({ '@type': 'FAQPage', mainEntity: pairs.map((p) => ({ '@type': 'Question', name: p.q, acceptedAnswer: { '@type': 'Answer', text: p.a } })) });
   }
-  if (item.path === '/legal-services/') isServices = true;
+  if (HUB_PATHS.has(item.path)) isServices = true;
   schema.push(breadcrumb(trail.map((t, i) => (i === trail.length - 1 ? { name: t.name } : t))));
 } else if (cat) {
   h1 = cat.name;
   title = `${cat.name}: Legal Guides & Information in Chennai`;
   description = `Guides and legal information on ${cat.name} in Chennai and the Madras High Court from Rajendra Criminal Law Firm. General information, not legal advice.`;
   listing = POSTS.filter((p) => p.cats.includes(cat.slug));
+  keyGuides = (CATEGORY_PINS[cat.slug] ?? []).map((p) => ITEMS.find((i) => i.path === p)).filter(Boolean) as Item[];
   subcats = CATEGORIES.filter((c) => c.parent === cat.slug);
   const chain = categoryChain(cat);
   trail = [{ name: 'Home', href: '/' }, { name: 'Legal services', href: '/legal-services/' }, ...chain.map((c, i) => (i === chain.length - 1 ? { name: c.name } : { name: c.name, href: catUrl(c) }))];
@@ -129,6 +133,10 @@ const showCta = kind === 'category' || (item && (item.type !== 'page' || item.pa
 
         {isServices && (
           <div class="mt-12">
+            <h2 class="font-serif text-2xl text-navy mb-5">Start with these guides</h2>
+            <ul class="grid gap-3 mb-12">
+              {startGuides.map((g) => (<li><a href={g.path} class="card-link"><span class="block text-navy font-semibold leading-snug">{g.title}</span><span class="block mt-1 text-sm text-ink/70 line-clamp-2">{g.description}</span></a></li>))}
+            </ul>
             <h2 class="font-serif text-2xl text-navy mb-5">Browse criminal law topics</h2>
             <ul class="grid sm:grid-cols-2 gap-3">
               {CATEGORIES.filter((c) => !c.parent && c.count > 0).map((c) => (<li><a href={catUrl(c)} class="card-link text-navy font-medium">{c.name} <span class="text-xs text-ink/50">· {c.count}</span></a></li>))}
@@ -172,6 +180,14 @@ const showCta = kind === 'category' || (item && (item.type !== 'page' || item.pa
           <div class="mb-10">
             <h2 class="font-serif text-xl text-navy mb-3">Sub-topics</h2>
             <ul class="flex flex-wrap gap-2">{subcats.map((c) => <li><a href={catUrl(c)} class="px-4 py-2 bg-white border border-navy/15 hover:border-gold text-navy rounded-full text-sm">{c.name} · {c.count}</a></li>)}</ul>
+          </div>
+        )}
+        {keyGuides.length > 0 && (
+          <div class="mb-10">
+            <h2 class="font-serif text-xl text-navy mb-3">Key guides</h2>
+            <ul class="grid gap-3">
+              {keyGuides.map((g) => (<li><a href={g.path} class="card-link border-l-4 border-l-gold"><span class="block text-navy font-semibold leading-snug">{g.title}</span><span class="block mt-1 text-sm text-ink/70 line-clamp-2">{g.description}</span></a></li>))}
+            </ul>
           </div>
         )}
         {listing.length === 0 ? (
