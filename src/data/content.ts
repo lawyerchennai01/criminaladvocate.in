@@ -1,4 +1,5 @@
 import data from './content.json';
+import recreated from './recreated.json';
 import { catBySlug, catUrl, type Category } from './site';
 
 export type Item = {
@@ -15,11 +16,17 @@ export type Item = {
   html: string;
   image: { src: string; w?: number; h?: number; alt: string } | null;
   tags?: string[];
+  related?: string[];
+  recreated?: boolean;
 };
 
 // Hand-built pages (home, contact) are not generated from the export.
 export const HANDMADE = new Set(['/', '/contact/', '/contact-us/']);
-export const ITEMS = (data.items as Item[]).filter((i) => !HANDMADE.has(i.path));
+// Articles recreated at the old tag URLs that earned search traffic (src/data/recreated/*.md -> recreated.json).
+export const RECREATED = recreated as unknown as Item[];
+export const ITEMS = [...(data.items as Item[]), ...RECREATED]
+  .filter((i) => !HANDMADE.has(i.path))
+  .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 export const POSTS = ITEMS.filter((i) => i.type === 'post');
 export const NEWS = ITEMS.filter((i) => i.type === 'news');
 // Internal-linking aids. Hub pages get a topic grid plus guides; category pages get pinned key guides.

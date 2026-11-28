@@ -12,7 +12,7 @@ const guidePaths = [
   '/can-an-fir-be-quashed-by-the-high-court-heres-how/',
 ];
 const guides = guidePaths.map((p) => ITEMS.find((i) => i.path === p)).filter(Boolean) as typeof ITEMS;
-const latest = POSTS.slice(0, 6);
+const latest = POSTS.filter((p) => !p.recreated).slice(0, 6);
 const blurbs: Record<string, string> = {
   bail: 'Regular, anticipatory and default bail — procedure, conditions and timelines.',
   'criminal-defense': 'Defence of criminal cases before trial courts and the Madras High Court.',
