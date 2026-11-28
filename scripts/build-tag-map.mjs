@@ -74,9 +74,15 @@ for (const t of tags.values()) {
   stats.hub++;
 }
 const hubSlugs = new Set(hubs.map((h) => h.slug));
-// every Search Console tag URL that is not a hub gets a specific 301
+// Articles recreated at old tag URLs (scripts/build-recreated.mjs) are real pages now: no redirect for them,
+// and the extra tag URLs folded into an article (aliases) redirect to it.
+const recreated = fs.existsSync('src/data/recreated.json') ? JSON.parse(fs.readFileSync('src/data/recreated.json', 'utf8')) : [];
+const recSlugs = new Set(recreated.filter((r) => r.path.startsWith(PREFIX)).map((r) => r.path.slice(PREFIX.length).replace(/\/$/, '')));
+const aliasTarget = new Map();
+for (const r of recreated) for (const a of r.aliases ?? []) aliasTarget.set(a, r.path);
 for (const r of gsc) {
-  if (hubSlugs.has(r.slug)) continue;
+  if (hubSlugs.has(r.slug) || recSlugs.has(r.slug)) continue;
+  if (aliasTarget.has(r.slug)) { redirects.push([`${PREFIX}${r.slug}/`, aliasTarget.get(r.slug), r.clicks]); continue; }
   const t = tags.get(r.slug);
   let target = null;
   if (t && t.posts.size >= 1) {
@@ -94,7 +100,7 @@ const have = new Set(redirects.map((r) => r[0]));
 const linked = new Set();
 for (const i of content.items) for (const m of i.html.matchAll(/href="\/attorneys-chennai\/([^"\/#?]+)\/?"/g)) linked.add(decodeURIComponent(m[1]));
 for (const slug of linked) {
-  if (hubSlugs.has(slug) || have.has(`${PREFIX}${slug}/`)) continue;
+  if (hubSlugs.has(slug) || recSlugs.has(slug) || have.has(`${PREFIX}${slug}/`)) continue;
   const t = tags.get(slug);
   const pool = t && t.posts.size ? [...t.posts].map((p) => postByPath.get(p)) : allPosts;
   const p = pool.length === 1 ? pool[0] : bestPost(slug, pool);

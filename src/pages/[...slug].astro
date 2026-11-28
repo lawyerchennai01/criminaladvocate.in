@@ -74,7 +74,12 @@ if (kind === 'item' && item) {
     // receives the same number of inbound links instead of the newest few collecting them all.
     const pool = item.type === 'news' ? NEWS : POSTS.filter((p) => item.primary && p.cats.includes(item.primary));
     const at = pool.findIndex((p) => p.path === item.path);
-    if (at >= 0) related = Array.from({ length: Math.min(4, pool.length - 1) }, (_, k) => pool[(at + 1 + k) % pool.length]);
+    const cyc = at >= 0 ? Array.from({ length: Math.min(4, pool.length - 1) }, (_, k) => pool[(at + 1 + k) % pool.length]) : [];
+    // recreated articles: the posts chosen for them first; existing posts: any recreated article that points at them first
+    const chosen = (item.related ?? []).map((p) => ITEMS.find((i) => i.path === p)).filter(Boolean) as Item[];
+    const reverse = ITEMS.filter((i) => i.related?.includes(item.path));
+    const seen = new Set<string>();
+    related = [...chosen, ...reverse, ...cyc].filter((r) => r.path !== item.path && !seen.has(r.path) && seen.add(r.path)).slice(0, item.recreated ? 6 : 5);
   }
   if (e.faq.length >= 2) {
     schema.push({ '@type': 'FAQPage', '@id': url + '#faq', mainEntity: e.faq.map((p) => ({ '@type': 'Question', name: p.q, acceptedAnswer: { '@type': 'Answer', text: p.a } })) });
